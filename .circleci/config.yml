@@ -6,6 +6,5 @@ orbs:
 workflows:
   maven_test:
     jobs:
-      - with_cache
       - maven/test:
           command: 'test'
