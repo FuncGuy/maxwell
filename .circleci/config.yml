@@ -12,23 +12,23 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-        key: dependency-cache-{{ checksum "pom.xml" }}
+          key: dependency-cache-{{ checksum "pom.xml" }}
       - run:
-        name: Cache m2 artifacts
-        command: mvn dependency:go-offline
+          name: Cache m2 artifacts
+          command: mvn dependency:go-offline
       - save_cache:
-        key: dependency-cache-{{ checksum "pom.xml" }}
-        paths: [ "~/.m2" ]
+          key: dependency-cache-{{ checksum "pom.xml" }}
+          paths: [ "~/.m2" ]
   test:
     docker:
       - image: cimg/openjdk:11.0
     steps:
       - checkout
       - run:
-        name: testit
-        command: mvn test
+          name: testit
+          command: mvn test
       - store_artifacts:
-        path: test.log
+          path: test.log
 
 workflows:
   version: 2
