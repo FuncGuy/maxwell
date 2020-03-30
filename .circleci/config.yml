@@ -22,6 +22,9 @@ jobs:
   test:
     docker:
       - image: cimg/openjdk:11.0
+    parameters:
+      mysql:
+        type: string
     environment:
       MYSQL_VERSION: "<< parameters.mysql >>"
     steps:
