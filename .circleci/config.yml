@@ -1,16 +1,41 @@
 version: 2.1
 
-orbs:
-  maven: circleci/maven@1.0.0
-
 executors:
   jdk11:
     docker:
-    - image: cimg/openjdk:11.0
+
+
+jobs:
+  build:
+    docker:
+      - image: cimg/openjdk:11.0
+    steps:
+      - checkout
+      - restore_cache:
+        key: dependency-cache-{{ checksum "pom.xml" }}
+      - run:
+        name: Cache m2 artifacts
+        command: mvn dependency:go-offline
+      - save_cache:
+        key: dependency-cache-{{ checksum "pom.xml" }}
+        paths: [ "~/.m2" ]
+  test:
+    docker:
+      - image: cimg/openjdk:11.0
+    steps:
+      - checkout
+      - run:
+        name: testit
+        command: mvn test
+      - store_artifacts:
+        path: test.log
 
 workflows:
-  maven_test:
+  version: 2
+  build_and_test:
     jobs:
-      - maven/test:
-          command: 'test'
-          executor: jdk11
+      - build
+      - test:
+          requires:
+            - build
+
