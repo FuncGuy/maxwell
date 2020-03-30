@@ -8,3 +8,6 @@ workflows:
     jobs:
       - maven/test:
           command: 'test'
+          executor:
+            name: default
+            tag: 11.0
