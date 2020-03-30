@@ -1,7 +1,12 @@
 version: 2.1
 
+executors:
+  jdk11:
+    docker:
+
+
 jobs:
-  test:
+  build:
     docker:
       - image: cimg/openjdk:11.0
     steps:
@@ -14,6 +19,15 @@ jobs:
       - save_cache:
           key: dependency-cache-{{ checksum "pom.xml" }}
           paths: [ "~/.m2" ]
+  test:
+    docker:
+      - image: cimg/openjdk:11.0
+    environment:
+      MYSQL_VERSION: "<< parameters.mysql >>"
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "pom.xml" }}
       - run:
           name: testit
           command: mvn test
@@ -24,5 +38,13 @@ workflows:
   version: 2
   build_and_test:
     jobs:
-      - test
+      - test:
+          mysql: "5.5"
+          requires: [ "build" ]
+      - test:
+          mysql: "5.7"
+          requires: [ "build" ]
+      - test:
+          mysql: "8.0"
+          requires: [ "build" ]
 
