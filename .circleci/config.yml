@@ -27,7 +27,7 @@ jobs:
         type: string
     environment:
       MYSQL_VERSION: "<< parameters.mysql >>"
-      JAVA_TOOL_OPTIONS: "-Xmx100m"
+      JAVA_TOOL_OPTIONS: "-Xmx400m"
     steps:
       - checkout
       - restore_cache:
